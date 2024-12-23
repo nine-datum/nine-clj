@@ -177,7 +177,7 @@
 (defn look-rot[dir]
   (let[
       [x y z] dir
-      rx (Math/asin (+ y))
+      rx (Math/asin (- y))
       ry (clock x z)
     ]
     [rx ry 0]
@@ -185,3 +185,7 @@
 )
 
 (defn zero-len? [v] (zero? (mat/length v)))
+
+(defn mul [& ms]
+  (reduce #(.mul %1 %2) ms)
+)

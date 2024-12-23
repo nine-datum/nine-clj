@@ -64,19 +64,17 @@
 )
 
 (declare set-matrix)
+(declare rotmat)
+(declare get-position)
+(declare get-velocity)
+(declare get-matrix)
+(declare set-angular-velocity)
 
 (defn add-rigid-body [dynamics-world shape pos rot mass]
   (let [
       [px py pz] pos
       [rx ry rz] rot
-      mat3 (Matrix3f.)
-      mat3 (do
-        (.setIdentity mat3)
-        (.rotX mat3 rx)
-        (.rotY mat3 ry)
-        (.rotZ mat3 rz)
-        mat3
-      )
+      mat3 (apply rotmat rot)
       mat4 (Matrix4f. mat3 (Vector3f. px py pz) (float 1))
       transform (Transform. mat4)
       motion-state (DefaultMotionState. transform)
@@ -106,6 +104,29 @@
 
 (defn extract-vec3 [^Vector3f v]
   [(.x v) (.y v) (.z v)]
+)
+
+(defn make-vec3 [^double x ^double y ^double z]
+  (Vector3f. x y z)
+)
+
+(defn rotx [x]
+  (doto (Matrix3f.) .setIdentity (.rotX x))
+)
+
+(defn roty [y]
+  (doto (Matrix3f.) .setIdentity (.rotY y))
+)
+
+(defn rotz [z]
+  (doto (Matrix3f.) .setIdentity (.rotZ z))
+)
+
+(defn rotmat [x y z]
+  (doto (rotx x)
+    (.mul (roty y))
+    (.mul (rotz z))
+  )
 )
 
 (defn transform-position [t pos]
@@ -154,6 +175,62 @@
   body
 )
 
+(defn update-velocity [^RigidBody body func]
+  (->> body get-velocity func (set-velocity body))
+)
+
+(defn apply-world-force [^RigidBody body force at]
+  (let [
+      rel (mapv - at (get-position body))
+      ang (mat/cross rel force)
+    ]
+    (.applyCentralForce body (apply make-vec3 force))
+    (.applyTorque body (apply make-vec3 ang))
+    body
+  )
+)
+
+(defn rotate-by-relative-force [^RigidBody body force rel]
+  (->> force (mat/cross rel) (set-angular-velocity body))
+)
+
+(defn apply-local-force [^RigidBody body force at]
+  (let [
+      [force at] (map
+        #(-> body get-matrix math/mat4f
+          (.transformVector (apply math/vec3f %))
+          math/floats-from-vec3f
+        )
+        [force at]
+      )
+    ]
+    (.applyCentralForce body (apply make-vec3 force))
+    (rotate-by-relative-force body force at)
+    body
+  )
+)
+
+(defn apply-force [^RigidBody body force]
+  (.applyCentralForce body (apply make-vec3 force))
+)
+
+(defn get-point-velocity [^RigidBody body point]
+  (let [
+      l (.getLinearVelocity body (Vector3f.))
+      a (.getAngularVelocity body (Vector3f.))
+      [px py pz] point
+      o (.origin (.getCenterOfMassTransform body (Transform.)))
+      s (Vector3f.)
+      c (Vector3f.)
+      r (Vector3f.)
+    ]
+    (.sub s (Vector3f. px py pz) o)
+    (.cross c a s)
+    (.add r c l)
+    (extract-vec3 r)
+  )
+)
+
 (defn get-velocity [^RigidBody body]
   (let [
       v (.getLinearVelocity body (Vector3f.))
@@ -190,11 +267,6 @@
   body
 )
 
-(defn set-rotation-enabled [^RigidBody body v]
-  (.setAngularFactor body (if v 1 0))
-  body
-)
-
 (defn set-position [^RigidBody body pos]
   (let [
       t (.getCenterOfMassTransform body (Transform.))
@@ -202,6 +274,32 @@
     ]
     (.setCenterOfMassTransform body t)
   )
+  body
+)
+
+(defn set-rotation [^RigidBody body rot]
+  (let [
+      mat3 (apply rotmat rot)
+      t (Transform.)
+    ]
+    (.getCenterOfMassTransform body t)
+    (-> t .basis (.set mat3))
+    (.setCenterOfMassTransform body t)
+    body
+  )
+)
+
+(defn rotate [^RigidBody body rot]
+  (set-matrix body
+    (-> body get-matrix math/mat4f
+      (math/mul (apply math/rotation rot))
+      math/floats-from-mat4f
+    )
+  )
+)
+
+(defn set-rotation-enabled [^RigidBody body v]
+  (.setAngularFactor body (if v 1 0))
   body
 )
 
@@ -224,6 +322,16 @@
     ]
     (.getColumn m 3 fs)
     (vec (take 3 fs))
+  )
+)
+
+(defn get-look [^RigidBody body]
+  (-> body
+    get-matrix
+    math/mat4f
+    (.transformVector (math/vec3f 0 0 1))
+    math/floats-from-vec3f
+    math/normalize
   )
 )
 
@@ -296,7 +404,15 @@
   )
 )
 
-(defn sphere-check [^DiscreteDynamicsWorld world from to radius]
+(defn make-mask [ignore-groups]
+  (cond
+    (empty? ignore-groups) -1
+    (-> ignore-groups rest empty?) (-> ignore-groups first bit-not short)
+    :else (-> (apply bit-or ignore-groups) bit-not short)
+  )
+)
+
+(defn sphere-check [^DiscreteDynamicsWorld world from to radius & ignore-groups]
   (let [
       ss (SphereShape. radius)
       tf (fn [t c]
@@ -314,12 +430,13 @@
         )
       )
     ]
+    (set! (.collisionFilterMask callback) (make-mask ignore-groups))
     (.convexSweepTest world ss tfrom tto callback)
     @res
   )
 )
 
-(defn sphere-cast [^DiscreteDynamicsWorld world from to radius]
+(defn sphere-cast [^DiscreteDynamicsWorld world from to radius & ignore-groups]
   (let [
       shape (doto (SphereShape. radius))
       [fx fy fz] from
@@ -334,6 +451,7 @@
           )
         )
       )
+      _ (set! (.collisionFilterMask callback) (make-mask ignore-groups))
       _ (.convexSweepTest world shape ft tt callback)
       has-hit? (.hasHit callback)
       point (-> callback .hitPointWorld extract-vec3)
@@ -357,13 +475,8 @@
       from (Vector3f. fx fy fz)
       to (Vector3f. tx ty tz)
       callback (CollisionWorld$ClosestRayResultCallback. from to)
-      mask (cond
-        (empty? ignore-groups) -1
-        (-> ignore-groups rest empty?) (-> ignore-groups first bit-not short)
-        :else (-> (apply bit-or ignore-groups) bit-not short)
-      )
     ]
-    (set! (.collisionFilterMask callback) mask)
+    (set! (.collisionFilterMask callback) (make-mask ignore-groups))
     (.rayTest world from to callback)
     (let [
         has-hit? (.hasHit callback)
