@@ -112,11 +112,15 @@
   )
 )
 
-(defn render-location [location]
+(defn render-location [dev res location]
   (graph/push-matrix)
   (apply graph/translate (location :pos))
   (apply graph/rotate (location :rot))
   (apply graph/scale (location :scale))
-  (->> location :models (map graph/model) dorun)
+  (->> location :models
+    (map #(graph/replace-materials (dev :gl) % { "Flag-material" (location :color) }))
+    (map graph/model)
+    dorun
+  )
   (graph/pop-matrix)
 )

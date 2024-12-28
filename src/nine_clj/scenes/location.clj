@@ -19,9 +19,6 @@
       pause-menu (res :location-pause-menu-setup)
       make-char (fn [phys-world preset pos look color side ai-next ai-in] (dat/load-char phys-world preset pos look color side :idle-pass ai-next ai-in 0))
       level (assoc (select-keys location [:pos :rot :shapes])
-        :models (->> location :models
-          (mapv #(graph/replace-materials (dev :gl) % { "Flag-material" (location :color) }))
-        )
         :presets (-> res :arena :presets)
         :update-state dat/update-game-state
         :update-phys phys/update-world
@@ -47,5 +44,5 @@
 (defn location-render-loop [dev res state]
   (generic/generic-render-loop dev res state)
   (->> res :world :models (map graph/model) dorun)
-  (->> state :locations vals (map generic/render-location) dorun)
+  (->> state :locations vals (map #(generic/render-location dev res %)) dorun)
 )

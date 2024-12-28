@@ -400,7 +400,7 @@
       [cx cy cz] (map #(->> 500/51 (mod %) (- %)) campos)
     ]
     (doseq [l (vals locations)]
-      (generic/render-location l)
+      (generic/render-location dev res l)
     )
     (graph/push-matrix)
     (graph/translate cx water-effect-level cz)
