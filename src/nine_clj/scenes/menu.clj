@@ -353,3 +353,16 @@
     )
   )
 )
+
+(defn win-menu-setup [dev res exit-state]
+  {
+    :gui-asset (res :gui-asset)
+    :loop menu-loop
+    :buttons [
+      ["Далее" (fn [dev res state] exit-state)]
+    ]
+    :texts [
+      ["Вы захватили город!" gui/aspect-fit-layout [1 1 1 1] [-0.5 0.2 1 0.1]]
+    ]
+  }
+)

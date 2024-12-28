@@ -99,6 +99,7 @@
       :location-setup location/location-setup
       :location-enter-menu-setup menu/location-enter-menu-setup
       :game-over-menu-setup menu/game-over-menu-setup
+      :win-menu-setup menu/win-menu-setup
     }
   )
 )

@@ -318,6 +318,7 @@
           arena-spawn
           location-enter-menu-setup
           game-over-menu-setup
+          win-menu-setup
         ]
       } res
       { :keys [player locations] } state
@@ -362,14 +363,18 @@
                 preset (-> res :arena :presets pkind)
                 player (load-horse phys-world horse preset ship color side pos look)
                 player (assoc player :army parmy)
-                location (assoc location :army loc-army)
-              ]
-              (cond
-                (empty? army) (game-over-menu-setup dev res)
-                :else (-> exit-state
+                location (as-> (assoc location :army loc-army) l
+                  (if (empty? loc-army) (assoc l :side side :color color) l)
+                )
+                updated-state (-> exit-state
                   (assoc :player player)
                   (update :locations #(assoc % (location :id) location))
                 )
+              ]
+              (cond
+                (empty? army) (game-over-menu-setup dev res)
+                (empty? loc-army) (win-menu-setup dev res updated-state)
+                :else updated-state
               )
             )
           )
