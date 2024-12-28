@@ -1,1 +1,0 @@
-nano "$(find src res -type f -name $1 | head -n 1)"
