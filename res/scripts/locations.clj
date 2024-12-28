@@ -20,7 +20,7 @@
           (assoc h
             :mat mat
             :preset preset
-            :models (->> preset :models (mapv #(graph/replace-materials (dev :gl) % { "Flag-material" color })))
+            :models (preset :models)
             :shapes (->> preset :shapes (mapv #(assoc % :pos pos :rot rot)))
             :entry-pos (-> h (nav/marker entry) nav/marker-pos)
             :entry-look (-> h (nav/marker entry) nav/marker-look)
