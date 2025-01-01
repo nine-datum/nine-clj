@@ -141,6 +141,21 @@
   ) :escape-state exit-state-setup)
 )
 
+(defn base-enter-menu-setup [dev res location-id location-state-setup arena-state-setup exit-state-setup resume-state]
+  (assoc (pause-menu-setup dev res []
+    [
+      ["Вы приблизились к своему городу" gui/aspect-fit-layout [1 1 1 1] [-0.5 0.2 1 0.1]]
+    ]
+    [
+      ["Зайти" (fn [dev res state] (location-state-setup))]
+      ["Управлять армией" (fn [dev res state] (->> state exit-state-setup (army-menu-setup dev res location-id)))]
+      ["Уйти" (fn [dev res state] (exit-state-setup state))]
+    ]
+    world/world-render-loop
+    resume-state
+  ) :escape-state exit-state-setup)
+)
+
 (defn game-over-menu-setup [dev res]
   {
     :gui-asset (res :gui-asset)

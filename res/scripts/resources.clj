@@ -98,6 +98,7 @@
       :location-pause-menu-setup menu/location-pause-menu-setup
       :location-setup location/location-setup
       :location-enter-menu-setup menu/location-enter-menu-setup
+      :base-enter-menu-setup menu/base-enter-menu-setup
       :game-over-menu-setup menu/game-over-menu-setup
       :win-menu-setup menu/win-menu-setup
     }

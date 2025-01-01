@@ -317,6 +317,7 @@
           arena-level
           arena-spawn
           location-enter-menu-setup
+          base-enter-menu-setup
           game-over-menu-setup
           win-menu-setup
         ]
@@ -379,8 +380,13 @@
             )
           )
           arena-state-setup #(arena-setup dev res arena-level arena-exit-setup)
+          enter-menu-setup (if
+            (= side player-side)
+            base-enter-menu-setup
+            location-enter-menu-setup
+          )
         ]
-        (location-enter-menu-setup dev res (location :id)
+        (enter-menu-setup dev res (location :id)
           #(location-setup dev res player location locations exit-state-setup)
           arena-state-setup
           (fn [menu-state] exit-state)
