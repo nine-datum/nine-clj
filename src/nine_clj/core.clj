@@ -112,5 +112,5 @@
 )
 
 (defn -main [& args]
-  (window 800 600 (nth args 0 :menu-setup) {})
+  (window 800 600 menu/menu-setup (apply hash-map args))
 )

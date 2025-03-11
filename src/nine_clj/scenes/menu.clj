@@ -194,6 +194,7 @@
       :res-func res-func
       :progress 0
       :max-progress (count load-funcs)
+      :setup setup
     }
   )
 )
@@ -202,7 +203,7 @@
   (let [
       state (menu-loop dev res state)
       { :keys [gui-asset] } res
-      { :keys [res-atom load-atom res-func load-funcs load-atom progress max-progress] } state
+      { :keys [res-atom load-atom res-func load-funcs load-atom progress max-progress setup] } state
       prog (/ progress max-progress)
       prog-col (math/lerpv [0 0 1 1] [0 1 0 1] prog)
       prog-back-col [1/2 1/2 1/2 1]
@@ -216,7 +217,7 @@
     (gui/text gui-asset gui/aspect-fit-layout load-title -0.5 -0.1 1 0.1 [1 1 1 1])
     (gui/status-bar gui-asset gui/aspect-fit-layout prog prog-back-col prog-col -0.5 -0.2 1 0.05)
     (cond
-      (empty? load-funcs) (menu-setup dev (reset! res-atom ((res-func :func) @load-atom)))
+      (empty? load-funcs) (setup dev (reset! res-atom ((res-func :func) @load-atom)))
       :else (do
         (swap! load-atom (-> load-funcs first :func))
         (assoc state
