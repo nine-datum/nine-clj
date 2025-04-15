@@ -37,7 +37,7 @@
         (graph/animated-model model (graph/animate anim time) (graph/animate obj-anim time))
         (graph/pop-matrix)
       )
-      (range 100)
+      (range 1000)
     )
     state
   )
