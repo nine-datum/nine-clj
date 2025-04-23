@@ -13,12 +13,12 @@ Primary features :
 Datum is a game made using this library.
 See screenshots :
 
-![alt text][readme/1.png]
-![alt text][readme/2.png]
-![alt text][readme/3.png]
-![alt text][readme/4.png]
-![alt text][readme/5.png]
-![alt text][readme/6.png]
+![desert castle](readme/1.png)
+![mages tower](readme/2.png)
+![mages tower](readme/3.png)
+![sailing mechanics](readme/4.png)
+![player's own castle](readme/5.png)
+![horse riding](readme/6.png)
 
 ## As a Leiningen dependency
 ```
