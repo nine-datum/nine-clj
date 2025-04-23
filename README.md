@@ -1,7 +1,7 @@
 # nine-clj
 
 Simple and mighty 3D game engine for Clojure.
-Primary features :
+## Primary features :
 - Skeletal animation
 - COLLADA models import
 - 3D physics with COLLADA shapes
