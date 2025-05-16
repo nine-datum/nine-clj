@@ -1,3 +1,4 @@
+#!/bin/sh
 lein uberjar
 mkdir -p target/build
 cp -r res target/build/res
