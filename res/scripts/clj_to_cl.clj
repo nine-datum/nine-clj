@@ -18,15 +18,13 @@
   )
 )
 
-(folder-to-cl "res/datum/anims/archer" "../ten/res/anims/archer")
-
 (defn folders-to-cl [src-root dst-root & names]
   (doseq [n names]
     (folder-to-cl (str src-root "/" n) (str dst-root "/" n))
   )
 )
 
-(folders-to-cl "res/datum/anims" "../ten/res/anims"
+(folders-to-cl "res/datum/anims" "../lamast/res/anims"
   "archer"
   "fighter"
   "mage"
