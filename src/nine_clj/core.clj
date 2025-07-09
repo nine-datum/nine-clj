@@ -82,8 +82,10 @@
   (proxy [WindowStartAction] []
     (start [id]
       (let [
+          decoder (nine.io.encoding.ResourcesDecoder.)
+          _ (-> "res.txt" nine.io.FileStorageResource. nine.io.encoding.FileDecoder. (.decode decoder nil))
           dev {
-            :storage (FileStorage.)
+            :storage (.storage decoder)
             :gl (graph/new-gl)
             :keyboard (input/keyboard id)
             :mouse (input/mouse id proc-refresh-status)
