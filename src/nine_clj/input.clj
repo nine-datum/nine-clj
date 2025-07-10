@@ -7,6 +7,9 @@
       LWJGL_Keyboard
       LWJGL_Mouse
     ]
+    [nine.input
+      Keyboard
+    ]
     [nine.math
       Vector2f
     ]
@@ -29,6 +32,15 @@
         :right-up (-> m .right .isUp)
         :middle-up (-> m .middle .isUp)
       )
+    )
+  )
+)
+
+(defn empty-mouse []
+  (fn [key]
+    (case key
+      :delta [0 0]
+      :pos [0 0]
     )
   )
 )
@@ -59,6 +71,10 @@
 
 (defn keyboard [wid]
   (LWJGL_Keyboard. wid)
+)
+
+(defn empty-keyboard []
+  Keyboard/empty
 )
 
 (defn key-down [keyboard key] (-> keyboard (.keyOf key) .isDown))

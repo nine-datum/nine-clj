@@ -91,7 +91,7 @@
   )
 )
 
-(defn window-start [setup gl storage keyboard mouse get-width get-height get-time]
+(defn window-start [setup gl storage keyboard mouse get-time]
   (let [
       dev {
         :storage storage
@@ -99,8 +99,8 @@
         :keyboard keyboard
         :mouse mouse
         :get-time get-time
-        :width get-width
-        :height get-height
+        :width width
+        :height height
       }
     ]
     (reset! state (menu/loading-menu-setup dev resources setup))
@@ -125,7 +125,7 @@
         (mouse :update)
         (input/keyboard-update keyboard)
         (->
-          (window-start setup gl storage keyboard mouse width height get-time)
+          (window-start setup gl storage keyboard mouse get-time)
           (window-loop-action resources focused? on-close)
         )
       )
