@@ -112,7 +112,7 @@
   (proxy [WindowStartAction] []
     (start [id]
       (let [
-          storage (-> "res.txt" java.io.File. java.io.FileInputStream. decode-storage)
+          storage (FileStorage.)
           gl (graph/new-gl)
           keyboard (input/keyboard id)
           mouse (input/mouse id proc-refresh-status)

@@ -2,7 +2,7 @@
 
 (defn read-file [storage file]
   (let [
-      p (-> (.open storage file) .inputStream java.io.InputStreamReader. java.io.PushbackReader.)
+      p (-> (.open storage file) nine.io.TextFileReader. .readString .getBytes (java.io.ByteArrayInputStream.) java.io.InputStreamReader. java.io.PushbackReader.)
       ex (loop [ex []]
         (let [e (read p false nil)]
           (cond (nil? e) ex :else (recur (conj ex e)))
