@@ -11,7 +11,7 @@
       { :keys [gl storage mouse width height] } dev
       image-shader (graph/load-shader gl storage "res/shaders/image_vertex.glsl" "res/shaders/image_fragment.glsl")
       text-shader image-shader
-      text-asset (graph/load-text-asset gl (text/load-font "res/fonts/ubuntu.ttf" 50))
+      text-asset (graph/load-text-asset gl storage "Ubuntu-50")
       button-image (graph/load-image gl storage "res/images/button.png")
       blank-image (graph/load-image-tex gl (.blankTexture gl))
     ]

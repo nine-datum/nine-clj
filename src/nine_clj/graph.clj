@@ -164,12 +164,6 @@
   )
 )
 
-(defn load-image-img [gl img]
-  (load-image-tex gl
-    (.texture gl img false)
-  )
-)
-
 (defn unload-image [img]
   (->> img :tex .dispose)
   (->> img :geom .dispose)
@@ -234,13 +228,11 @@
   )
 )
 
-(defn load-font [name] (text/font name))
-
-(defn load-text-asset [gl font]
+(defn load-text-asset [gl storage file-name]
   (let
     [
-      { :keys [img rects] } (text/text-image font)
-      tex (load-image-img gl img)
+      { :keys [img rects] } (text/load-text file-name)
+      tex (load-image gl storage img)
     ]
     (assoc tex :rects rects)
   )
