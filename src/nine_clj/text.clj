@@ -6,13 +6,13 @@
   )
 )
 
-(defn load-text [font-name]
+(defn load-text [storage font-name]
   (let [
       file (str "res/fonts/" font-name)
       img-file (str file ".png")
       rects-file (str file "-rects" ".txt")
     ]
-    { :img img-file :rects (-> rects-file slurp read-string) }
+    { :img img-file :rects (->> rects-file (.open storage) nine.io.TextFileReader. .readString read-string) }
   )
 )
 

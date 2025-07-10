@@ -231,7 +231,7 @@
 (defn load-text-asset [gl storage file-name]
   (let
     [
-      { :keys [img rects] } (text/load-text file-name)
+      { :keys [img rects] } (text/load-text storage file-name)
       tex (load-image gl storage img)
     ]
     (assoc tex :rects rects)
@@ -397,7 +397,7 @@
 
 (defn load-anim-clj [storage bone-type anim-file model-file]
   (let [
-      db ((comp read-string slurp) anim-file)
+      db (-> (.open storage anim-file) nine.io.TextFileReader. .readString read-string)
       bone-names ((comp set map) first (db :bones))
       resources (db :resources)
       len (db :length)

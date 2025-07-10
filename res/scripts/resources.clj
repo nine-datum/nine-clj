@@ -42,7 +42,7 @@
         )
       )
       script-load-func (fn [file]
-        (fn [& args] (-> file scripting/read-file (apply args)))
+        (fn [& args] (-> (scripting/read-file storage file) (apply args)))
       )
       arena (load-scene (partial graph/load-model graphics) "res/datum/scene/arena.dae")
       world (load-scene (partial world/load-world-model dev) "res/datum/scene/world/world.dae")

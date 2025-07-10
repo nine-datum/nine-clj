@@ -177,7 +177,7 @@
       { :keys [gl storage mouse width height] } dev
       gui-asset (gui/gui-asset (assoc dev :mouse (input/viewport-mouse mouse width height)))
       menu-image (graph/load-image gl storage "res/images/menu.png")
-      [load-funcs res-func]  (-> "res/scripts/resources.clj" scripting/read-file (apply [dev]))
+      [load-funcs res-func]  (-> (scripting/read-file storage "res/scripts/resources.clj") (apply [dev]))
     ]
     (swap! res-atom #(assoc % :gui-asset gui-asset :menu-image menu-image))
     {
