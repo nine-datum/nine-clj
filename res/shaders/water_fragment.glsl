@@ -11,5 +11,5 @@ uniform vec3 time;
 
 void main (void)
 {
-	out_Color = vec4(color.rgb * texture(texture2d, worldPos.xz * 0.01).rgb * (dot(worldNormal, -worldLight) + 1) * 0.5, 1);
+	out_Color = vec4(color.rgb * texture(texture2d, worldPos.xz * 0.01).rgb * (dot(worldNormal, -worldLight) + 1.0) * 0.5, 1.0);
 }

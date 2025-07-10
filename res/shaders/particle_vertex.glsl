@@ -35,7 +35,7 @@ vec3 rotX (vec3 v, float angle)
 void main (void)
 {
   int ind = int(position.z);
-  float ang = ind * 3.14 * 0.25;
+  float ang = float(ind) * 3.14 * 0.25;
   
   vec3 pos0 = position - vec3(0, 0, position.z);
   pos0 = pos0 * 0.5;
@@ -43,11 +43,14 @@ void main (void)
   pos0 = rotY(pos0, ang);
   vec3 pos = (transform * vec4(pos0, 1)).xyz;
 
-  float s = 2;
+  float s = 2.0;
   float nx = sin(ang) * s;
   float nz = cos(ang) * s;
-  float g = 4;
-  pos = pos + vec3(0, 1 + int(ind / 8) * 0.25, 0) + vec3(nx, 2, nz) * time.x - vec3(0, 1, 0) * (g * time.x * time.x * 0.5);
+  float g = 4.0;
+  pos = pos
+    + vec3(0, 1.0 + float(int(ind / 8)) * 0.25, 0)
+    + vec3(nx, 2, nz) * time.x
+    - vec3(0, 1, 0) * (g * time.x * time.x * 0.5);
   
   uv = texcoord;
   worldNormal = normalize((transform * vec4(normal, 0)).xyz);
