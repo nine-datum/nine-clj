@@ -8,7 +8,6 @@
     [nine-clj.phys :as phys]
     [nine-clj.prof :as prof]
     [nine-clj.math :as math]
-    [nine-clj.scripting :as scripting]
     [nine-clj.mac :refer [-->]]
   ]
 )

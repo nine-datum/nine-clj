@@ -4,7 +4,7 @@
   :license {:name "Creative Commons Attribution-NonCommercial-NoDerivs 4.0 International"
             :url "https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode.txt"}
   :dependencies [
-    [org.clojure/clojure "1.11.1"]
+    [org.clojure/clojure "1.13.0-master-SNAPSHOT"]
     [net.mikera/core.matrix "0.63.0"]
     [io.github.taqmuraz/nine "1.2.40"]
     [cz.advel.jbullet/jbullet "20101010-1"]

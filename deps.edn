@@ -1,5 +1,5 @@
 {:paths ["src"]
- :deps {org.clojure/clojure {:mvn/version "1.11.1"}
+ :deps {org.clojure/clojure {:mvn/version "1.13.0-master-SNAPSHOT"}
         net.mikera/core.matrix {:mvn/version "0.63.0"}
         io.github.taqmuraz/nine {:mvn/version "1.2.40"}
         cz.advel.jbullet/jbullet {:mvn/version "20101010-1"}

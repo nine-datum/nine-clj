@@ -9,7 +9,6 @@
     [nine-clj.scenes.generic :as generic]
     [nine-clj.scenes.world :as world]
     [nine-clj.scenes.location :as location]
-    [nine-clj.scripting :as scripting]
     [nine-clj.mac :refer [-->]]
   ]
 )
@@ -172,12 +171,12 @@
 
 (declare loading-menu-loop)
 
-(defn loading-menu-setup [dev res-atom setup]
+(defn loading-menu-setup [dev res-atom load-resources setup]
   (let [
       { :keys [gl storage mouse width height] } dev
       gui-asset (gui/gui-asset (assoc dev :mouse (input/viewport-mouse mouse width height)))
       menu-image (graph/load-image gl storage "res/images/menu.png")
-      [load-funcs res-func]  (-> (scripting/read-file storage "res/scripts/resources.clj") (apply [dev]))
+      [load-funcs res-func]  (load-resources dev)
     ]
     (swap! res-atom #(assoc % :gui-asset gui-asset :menu-image menu-image))
     {

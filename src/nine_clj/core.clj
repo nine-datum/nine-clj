@@ -11,6 +11,7 @@
     [nine-clj.prof :as prof]
     [nine-clj.gui :as gui]
     [nine-clj.scenes.menu :as menu]
+    [nine-clj.scripts :as scripts]
   )
   (:import
     [nine.lwjgl
@@ -103,7 +104,7 @@
         :height height
       }
     ]
-    (reset! state (menu/loading-menu-setup dev resources setup))
+    (reset! state (menu/loading-menu-setup dev resources scripts/resources setup))
     dev
   )
 )
