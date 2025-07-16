@@ -10,8 +10,8 @@
 
 (defn setup [dev res]
   {
-    :model (-> res :arena :presets :archer :model)
-    :anim (-> res :arena :presets :archer :anims (get "idle_pass"))
+    :model (-> res :arena :presets :mage :model)
+    :anim (-> res :arena :presets :mage :anims (get "idle_pass"))
     :loop loop
   }
 )
